@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Almacén - Control de Herramientas</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="css/shared.css">
+  <link rel="stylesheet" href="css/panel-stock.css">
+  <link rel="icon" type="image/png" href="img/icono diseño.png">
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <h1>🏭 Almacén</h1>
+  <div class="header-right">
+    <button class="btn-volver" onclick="window.location.href='dashboard.html'">← Volver</button>
+    <button class="btn-logout" onclick="cerrarSesion()">Cerrar Sesión</button>
+  </div>
+</header>
+
+<!-- TABS -->
+<div class="tabs-container">
+  <button class="tab activo" onclick="mostrarTab('stock', this, tabCallbacks)">📦 Stock Disponible</button>
+  <button class="tab" onclick="mostrarTab('missolicitudes', this, tabCallbacks)">📨 Mis Solicitudes</button>
+</div>
+
+<!-- CONTENIDO -->
+<div class="contenido">
+
+  <!-- TAB: STOCK -->
+  <div id="tab-stock" class="tab-content active">
+    <div class="barra-acciones">
+      <div class="barra-filtros-stock">
+        <input type="text" id="buscadorStock" placeholder="🔍 Buscar por nombre o código..." class="input-buscar" oninput="filtrarStock()">
+      </div>
+      <button class="btn-solicitar-carrito" onclick="abrirModalCarrito()">
+        🛒 Solicitar
+        <span id="badgeCarrito" class="badge-carrito oculto">0</span>
+      </button>
+    </div>
+    <div class="tabla-wrapper">
+      <table class="tabla">
+        <thead>
+          <tr>
+            <th>Código</th>
+            <th>Nombre</th>
+            <th>Categoría</th>
+            <th>Modelo</th>
+            <th>Estado</th>
+            <th>Agregar</th>
+          </tr>
+        </thead>
+        <tbody id="tablaStock">
+          <tr><td colspan="6" class="cargando">Cargando...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- TAB: MIS SOLICITUDES -->
+  <div id="tab-missolicitudes" class="tab-content">
+    <div class="tabla-wrapper">
+      <table class="tabla">
+        <thead>
+          <tr>
+            <th>Herramienta</th>
+            <th>Fecha Solicitud</th>
+            <th>Estado</th>
+            <th>Acción</th>
+          </tr>
+        </thead>
+        <tbody id="tablaMisSolicitudes">
+          <tr><td colspan="4" class="cargando">Cargando...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<!-- MODAL: CARRITO DE SOLICITUDES -->
+<div id="modalCarrito" class="modal modal-carrito oculto">
+  <div class="modal-card">
+    <div class="carrito-header">
+      <h3>🛒 Mi Solicitud</h3>
+      <span class="carrito-contador"><span id="carritoCount">0</span>/10 herramientas</span>
+    </div>
+
+    <div id="carritoVacio" class="carrito-vacio">
+      <span class="carrito-vacio-icon">📭</span>
+      <p>No agregaste ninguna herramienta todavía.<br>Cerrá este panel y hacé clic en <strong>+ Agregar</strong>.</p>
+    </div>
+
+    <div id="carritoLista" class="carrito-lista oculto"></div>
+
+    <div class="carrito-limite-msg oculto" id="carritoLimiteMsg">
+      ⚠ Límite de 10 herramientas alcanzado.
+    </div>
+
+    <p class="aviso-solicitud">El almacenero recibirá tu solicitud y te entregará las herramientas en persona.</p>
+
+    <div id="mensajeCarrito" class="mensaje-form"></div>
+
+    <div class="modal-botones">
+      <button class="btn-cancelar" onclick="cerrarModal('modalCarrito')">Cancelar</button>
+      <button class="btn-confirmar" id="btnConfirmarCarrito" onclick="confirmarCarrito()" disabled>Enviar solicitud</button>
+    </div>
+  </div>
+</div>
+
+<!-- OVERLAY -->
+<div id="overlay" class="overlay oculto" onclick="cerrarTodosModales()"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabaseClient.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/panel-stock.js"></script>
+
+</body>
+</html>

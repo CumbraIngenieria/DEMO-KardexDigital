@@ -1,0 +1,45 @@
+body {
+    background: linear-gradient(135deg, #7810a9, #03142d);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-card {
+    width: 100%;
+    max-width: 400px;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(255, 255, 255, 0.2);
+    background: rgb(255, 255, 255);
+}
+
+.logo-container {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.logo {
+    max-width: 200px;
+    height: auto;
+}
+
+.btn-login {
+    width: 100%;
+}
+
+/* ─── RESPONSIVE ──────────────────────────────────────────── */
+@media (max-width: 480px) {
+  body {
+    align-items: flex-start;
+    padding: 40px 16px 20px;
+    height: auto;
+    min-height: 100vh;
+  }
+  .login-card {
+    padding: 24px 20px;
+    border-radius: 14px;
+  }
+  .logo { max-width: 160px; }
+}

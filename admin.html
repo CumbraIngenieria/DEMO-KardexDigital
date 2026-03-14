@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Panel Admin - Control de Herramientas</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="css/shared.css">
+  <link rel="stylesheet" href="css/admin.css">
+  <link rel="icon" type="image/png" href="img/icono diseño.png">
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <h1>⚙ Panel de Administración</h1>
+  <div class="header-right">
+    <button class="btn-volver" onclick="window.location.href='dashboard.html'">← Volver</button>
+    <button class="btn-logout" onclick="cerrarSesion()">Cerrar Sesión</button>
+  </div>
+</header>
+
+<!-- TABS DE NAVEGACIÓN -->
+<div class="tabs-container">
+  <button class="tab activo" onclick="mostrarTab('trabajadores', this, tabCallbacks)">👥 Trabajadores</button>
+  <button class="tab" onclick="mostrarTab('historial', this, tabCallbacks)">📋 Historial Completo</button>
+  <button class="tab" onclick="mostrarTab('backup', this, tabCallbacks)">🗄️ Backup</button>
+  <button class="tab" onclick="mostrarTab('historial-estados', this, tabCallbacks)">📊 Historial de Estados</button>
+</div>
+
+<!-- CONTENIDO PRINCIPAL -->
+<div class="contenido">
+
+  <!-- TAB: TRABAJADORES -->
+  <div id="tab-trabajadores" class="tab-content active">
+    <div class="barra-acciones">
+      <input type="text" id="buscadorTrabajador" placeholder="🔍 Buscar por nombre o DNI..." class="input-buscar" oninput="filtrarTrabajadores()">
+      <button class="btn-agregar" onclick="mostrarModalAgregar()">+ Agregar Trabajador</button>
+    </div>
+    <div class="tabla-wrapper">
+      <table class="tabla">
+        <thead>
+          <tr>
+            <th>DNI</th>
+            <th>Nombre</th>
+            <th>Apellidos</th>
+            <th>Cargo</th>
+            <th>Rol</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="tablaTrabajadores">
+          <tr><td colspan="7" class="cargando">Cargando...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- TAB: HISTORIAL COMPLETO -->
+  <div id="tab-historial" class="tab-content">
+    <div class="barra-reporte">
+      <span class="info-tab">Todos los movimientos del sistema: entregados, devueltos y rechazados.</span>
+      <button class="btn-exportar" onclick="exportarHistorialAdmin()">📊 Exportar Excel</button>
+    </div>
+    <div id="tablaHistorial" class="hist-lista">
+      <p class="cargando" style="padding:30px;text-align:center">Abrí este tab para cargar el historial.</p>
+    </div>
+  </div>
+
+  <!-- TAB: BACKUP -->
+  <div id="tab-backup" class="tab-content">
+    <div class="backup-layout">
+
+      <!-- FORMULARIO -->
+      <div class="backup-card">
+        <h3 class="backup-titulo">🗄️ Generar Backup Manual</h3>
+        <p class="backup-descripcion">
+          Completá los datos del backup. El sistema descargará un ZIP con todas las tablas
+          de la base de datos más un resumen en TXT.
+        </p>
+
+        <div class="backup-form">
+
+          <div class="form-item">
+            <label class="backup-label" for="backupTipo">Tipo de backup</label>
+            <select id="backupTipo" class="input-select">
+              <option value="">— Seleccioná el tipo —</option>
+              <option value="cierre">📦 Cierre de guardia</option>
+              <option value="inicio">🚀 Inicio de guardia</option>
+            </select>
+          </div>
+
+          <div class="form-item">
+            <label class="backup-label" for="backupSemana">Semana de guardia</label>
+            <select id="backupSemana" class="input-select">
+              <option value="">— Seleccioná la semana —</option>
+              <option value="1">Semana 1</option>
+              <option value="2">Semana 2</option>
+              <option value="3">Semana 3</option>
+              <option value="4">Semana 4</option>
+            </select>
+          </div>
+
+          <div class="form-item">
+            <label class="backup-label" for="backupVersion">Versión del sistema</label>
+            <input
+              type="text"
+              id="backupVersion"
+              class="input-form"
+              placeholder="Ej: 1.1"
+              maxlength="10"
+            >
+          </div>
+
+        </div>
+
+        <div id="backupMensaje" class="backup-mensaje oculto"></div>
+
+        <button class="btn-backup-generar" onclick="abrirConfirmacionBackup()">
+          🗄️ Generar backup
+        </button>
+      </div>
+
+      <!-- PANEL INFORMATIVO -->
+      <div class="backup-info-card">
+        <h4 class="backup-info-titulo">ℹ️ ¿Cuándo generar cada tipo?</h4>
+        <div class="backup-info-item">
+          <span class="backup-info-icon">📦</span>
+          <div>
+            <strong>Cierre de guardia</strong>
+            <p>Se genera el <strong>lunes a las 20:00</strong>. Captura el estado final antes del cambio de turno.</p>
+          </div>
+        </div>
+        <div class="backup-info-item">
+          <span class="backup-info-icon">🚀</span>
+          <div>
+            <strong>Inicio de guardia</strong>
+            <p>Se genera el <strong>martes a las 20:00</strong>. Captura el estado inicial tras el cambio de turno.</p>
+          </div>
+        </div>
+        <hr class="backup-info-hr">
+        <p class="backup-info-nota">
+          📁 El archivo descargado contendrá un <strong>CSV por tabla</strong>
+          más un <strong>resumen.txt</strong> con los totales del sistema al momento del backup.
+        </p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- TAB: HISTORIAL DE ESTADOS -->
+  <div id="tab-historial-estados" class="tab-content">
+    <div class="barra-reporte">
+      <span class="info-tab">Registro de todos los cambios de estado de herramientas.</span>
+      <button class="btn-exportar" onclick="exportarHistorialEstados()">📊 Exportar Excel</button>
+    </div>
+    <div id="tablaHistorialEstados" class="tabla-wrapper">
+      <p class="cargando" style="padding:30px;text-align:center">Abrí este tab para cargar el historial.</p>
+    </div>
+  </div>
+
+</div>
+
+<!-- MODAL: RESETEAR CONTRASEÑA -->
+<div id="modalReset" class="modal oculto">
+  <div class="modal-card">
+    <h3>🔑 Resetear Contraseña</h3>
+    <p>Trabajador: <strong id="modalNombre">—</strong></p>
+    <p>DNI: <strong id="modalDNI">—</strong></p>
+    <div id="resultadoReset" class="resultado-reset oculto">
+      <p>Nueva contraseña temporal:</p>
+      <div class="temp-pass-box" id="tempPassBox">—</div>
+      <p class="aviso-reset">Comunícala al trabajador. En su próximo login deberá cambiarla.</p>
+    </div>
+    <div class="modal-botones">
+      <button class="btn-cancelar" onclick="cerrarModal('modalReset')">Cerrar</button>
+      <button class="btn-confirmar" id="btnResetear" onclick="resetearPassword()">Resetear</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: CAMBIAR ROL -->
+<div id="modalRol" class="modal oculto">
+  <div class="modal-card">
+    <h3>👤 Cambiar Rol</h3>
+    <p>Trabajador: <strong id="modalRolNombre">—</strong></p>
+    <div class="form-item">
+      <label>Nuevo Rol</label>
+      <select id="selectRol" class="input-select">
+        <option value="1">Técnico</option>
+        <option value="2">Supervisor</option>
+        <option value="3">Almacenero</option>
+        <option value="4">Trabajador</option>
+      </select>
+    </div>
+    <div class="modal-botones">
+      <button class="btn-cancelar" onclick="cerrarModal('modalRol')">Cancelar</button>
+      <button class="btn-confirmar" onclick="confirmarCambioRol()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: AGREGAR TRABAJADOR -->
+<div id="modalAgregar" class="modal oculto">
+  <div class="modal-card">
+    <h3>➕ Agregar Trabajador</h3>
+    <div class="form-grid">
+      <div class="form-item">
+        <label>DNI</label>
+        <input type="text" id="nuevoDNI" class="input-form" placeholder="DNI">
+      </div>
+      <div class="form-item">
+        <label>Nombre</label>
+        <input type="text" id="nuevoNombre" class="input-form" placeholder="Nombre">
+      </div>
+      <div class="form-item">
+        <label>Apellidos</label>
+        <input type="text" id="nuevoApellidos" class="input-form" placeholder="Apellidos">
+      </div>
+      <div class="form-item">
+        <label>Cargo</label>
+        <input type="text" id="nuevoCargo" class="input-form" placeholder="Cargo">
+      </div>
+      <div class="form-item">
+        <label>Rol</label>
+        <select id="nuevoRol" class="input-select">
+          <option value="1">Técnico</option>
+          <option value="2">Supervisor</option>
+          <option value="3">Almacenero</option>
+          <option value="4">Trabajador</option>
+        </select>
+      </div>
+    </div>
+    <div id="mensajeAgregar" class="mensaje-form"></div>
+    <div class="modal-botones">
+      <button class="btn-cancelar" onclick="cerrarModal('modalAgregar')">Cancelar</button>
+      <button class="btn-confirmar" onclick="agregarTrabajador()">Agregar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: CONFIRMAR BACKUP -->
+<div id="modalBackup" class="modal oculto">
+  <div class="modal-card">
+    <h3>🗄️ Confirmar Backup</h3>
+    <p class="backup-confirm-subtitulo">Revisá los datos antes de generar el archivo.</p>
+
+    <div class="backup-confirm-grid">
+      <div class="backup-confirm-fila">
+        <span class="backup-confirm-label">Tipo</span>
+        <span id="confirmTipo" class="backup-confirm-valor">—</span>
+      </div>
+      <div class="backup-confirm-fila">
+        <span class="backup-confirm-label">Semana</span>
+        <span id="confirmSemana" class="backup-confirm-valor">—</span>
+      </div>
+      <div class="backup-confirm-fila">
+        <span class="backup-confirm-label">Mes / Año</span>
+        <span id="confirmMes" class="backup-confirm-valor">—</span>
+      </div>
+      <div class="backup-confirm-fila">
+        <span class="backup-confirm-label">Versión</span>
+        <span id="confirmVersion" class="backup-confirm-valor">—</span>
+      </div>
+      <div class="backup-confirm-fila">
+        <span class="backup-confirm-label">Archivo</span>
+        <span id="confirmArchivo" class="backup-confirm-valor backup-confirm-archivo">—</span>
+      </div>
+    </div>
+
+    <div id="backupProgreso" class="backup-progreso oculto">
+      <div class="backup-progreso-barra">
+        <div class="backup-progreso-fill" id="backupProgresoFill"></div>
+      </div>
+      <p id="backupProgresoTexto" class="backup-progreso-texto">Iniciando...</p>
+    </div>
+
+    <div class="modal-botones">
+      <button class="btn-cancelar" id="btnCancelarBackup" onclick="cerrarModal('modalBackup')">Cancelar</button>
+      <button class="btn-confirmar" id="btnConfirmarBackup" onclick="ejecutarBackup()">🗄️ Generar backup</button>
+    </div>
+  </div>
+</div>
+
+<!-- OVERLAY -->
+<div id="overlay" class="overlay oculto" onclick="cerrarTodosModales()"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<!-- JSZip para armar el ZIP en el navegador -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="js/supabaseClient.js"></script>
+<script src="js/constants.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/admin.js"></script>
+
+</body>
+</html>

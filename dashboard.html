@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Control de Herramientas</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="css/shared.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="icon" type="image/png" href="img/icono diseño.png">
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="header-logo">
+    <img src="img/icono diseño.png" alt="Icono" class="header-icono">
+    <img src="img/icono letras.png" alt="Kardex Digital" class="header-letras">
+  </div>
+  <div class="header-right">
+    <button class="btn-logout" onclick="cerrarSesion()">Cerrar Sesión</button>
+  </div>
+</header>
+
+<!-- CONTENIDO PRINCIPAL -->
+<div class="contenedor">
+
+  <!-- PANEL IZQUIERDO: DATOS DEL TRABAJADOR -->
+  <div class="panel-trabajador">
+    <div class="card">
+      <div class="card-header">
+        <div class="avatar" id="avatarInicial">?</div>
+        <div class="card-header-info">
+          <h2 id="nombreCompleto">Cargando...</h2>
+          <span id="cargoHeader">—</span>
+        </div>
+      </div>
+      <div class="dato-item">
+        <span class="dato-label">DNI</span>
+        <span class="dato-valor" id="datoDNI">—</span>
+      </div>
+      <div class="dato-item">
+        <span class="dato-label">Nombre</span>
+        <span class="dato-valor" id="datoNombre">—</span>
+      </div>
+      <div class="dato-item">
+        <span class="dato-label">Apellidos</span>
+        <span class="dato-valor" id="datoApellidos">—</span>
+      </div>
+      <div class="dato-item">
+        <span class="dato-label">Cargo</span>
+        <span class="dato-valor" id="datoCargo">—</span>
+      </div>
+      <div class="dato-item">
+        <span class="dato-label">Estado</span>
+        <span class="badge-estado" id="datoEstado">—</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANEL DERECHO: MÓDULOS SEGÚN ROL -->
+  <div class="panel-opciones">
+    <div class="seccion-titulo">Módulos del Sistema</div>
+    <div class="grid-opciones" id="gridOpciones"></div>
+
+    <div id="sec-mi-registro" class="seccion-contenido">
+      <div class="proximamente">
+        <div class="icon">📋</div>
+        <p>Módulo Mi Registro en desarrollo</p>
+      </div>
+    </div>
+
+    <div id="sec-almacen" class="seccion-contenido">
+      <div class="proximamente">
+        <div class="icon">🏭</div>
+        <p>Módulo Almacén en desarrollo</p>
+      </div>
+    </div>
+
+    <div id="sec-busqueda" class="seccion-contenido">
+      <div class="proximamente">
+        <div class="icon">🔍</div>
+        <p>Módulo Búsqueda Avanzada en desarrollo</p>
+      </div>
+    </div>
+
+    <div id="sec-admin" class="seccion-contenido">
+      <div class="proximamente">
+        <div class="icon">⚙️</div>
+        <p>Panel de Administración en desarrollo</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabaseClient.js"></script>
+<script src="js/constants.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/dashboard.js"></script>
+
+</body>
+</html>

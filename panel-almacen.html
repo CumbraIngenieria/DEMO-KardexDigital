@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Panel Almacén - Control de Herramientas</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="css/shared.css">
+  <link rel="stylesheet" href="css/panel-almacen.css">
+  <link rel="icon" type="image/png" href="img/icono diseño.png">
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <h1>🏭 Panel Almacén</h1>
+  <div class="header-right">
+    <button class="btn-volver" onclick="window.location.href='dashboard.html'">← Volver</button>
+    <button class="btn-logout" onclick="cerrarSesion()">Cerrar Sesión</button>
+  </div>
+</header>
+
+<!-- TABS -->
+<div class="tabs-container">
+  <button class="tab activo" onclick="mostrarTab('stock', this, tabCallbacks)">📦 Stock</button>
+  <button class="tab" onclick="mostrarTab('solicitudes', this, tabCallbacks)">📨 Solicitudes <span id="badgeSolicitudes" class="badge-tab oculto">0</span></button>
+  <button class="tab" onclick="mostrarTab('pendientes', this, tabCallbacks)">⏳ Pendientes <span id="badgePendientes" class="badge-tab oculto">0</span></button>
+  <button class="tab" onclick="mostrarTab('historial', this, tabCallbacks)">📋 Movimientos</button>
+  <button class="tab" onclick="mostrarTab('historial-estados', this, tabCallbacks)">📊 Historial de Estados</button>
+</div>
+
+<!-- CONTENIDO -->
+<div class="contenido">
+
+  <!-- TAB: STOCK -->
+  <div id="tab-stock" class="tab-content active">
+    <div class="barra-acciones">
+      <div class="barra-filtros-stock">
+        <input type="text" id="buscadorStock" placeholder="🔍 Buscar por nombre o código..." class="input-buscar" oninput="filtrarStock()">
+        <select id="filtroEstadoStock" class="input-select-stock" onchange="filtrarStock()">
+          <option value="">Todos los estados</option>
+          <option value="operativa">Operativa</option>
+          <option value="inoperativa">Inoperativa</option>
+          <option value="mantenimiento">Mantenimiento</option>
+          <option value="baja">Baja</option>
+        </select>
+      </div>
+      <div class="acciones-grupo">
+        <button class="btn-exportar" onclick="exportarInventario()">📊 Exportar inventario</button>
+      </div>
+    </div>
+    <div class="tabla-wrapper">
+      <table class="tabla">
+        <thead>
+          <tr>
+            <th>Código</th>
+            <th>Nombre</th>
+            <th>Categoría</th>
+            <th>Modelo</th>
+            <th>Estado</th>
+            <th>Justificación</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="tablaStock">
+          <tr><td colspan="6" class="cargando">Cargando...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- TAB: SOLICITUDES -->
+  <div id="tab-solicitudes" class="tab-content">
+    <div class="tabla-wrapper">
+      <table class="tabla">
+        <thead>
+          <tr>
+            <th>Solicitante</th>
+            <th>DNI</th>
+            <th>Herramientas</th>
+            <th>Fecha</th>
+            <th>Detalle</th>
+          </tr>
+        </thead>
+        <tbody id="tablaSolicitudes">
+          <tr><td colspan="6" class="cargando">Cargando...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- TAB: PENDIENTES -->
+  <div id="tab-pendientes" class="tab-content">
+    <p class="info-tab">Movimientos iniciados por almacén esperando confirmación, y transferencias entrantes para aceptar.</p>
+    <div class="tabla-wrapper">
+      <table class="tabla">
+        <thead>
+          <tr>
+            <th>Trabajador</th>
+            <th>Herramientas</th>
+            <th>Fecha</th>
+            <th>Detalle</th>
+          </tr>
+        </thead>
+        <tbody id="tablaPendientes">
+          <tr><td colspan="6" class="cargando">Cargando...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- TAB: HISTORIAL -->
+  <div id="tab-historial" class="tab-content">
+    <div class="barra-reporte">
+      <span class="info-tab">Movimientos donde participaste como origen o destino.</span>
+      <button class="btn-exportar" onclick="exportarHistorialAlmacen()">📊 Exportar Excel</button>
+    </div>
+    <div id="tablaHistorial" class="hist-lista">
+      <p class="cargando" style="padding:30px;text-align:center">Cargando...</p>
+    </div>
+  </div>
+
+  <!-- TAB: HISTORIAL DE ESTADOS -->
+  <div id="tab-historial-estados" class="tab-content">
+    <div class="barra-reporte">
+      <span class="info-tab">Registro de cambios de estado de herramientas realizados desde este panel.</span>
+      <button class="btn-exportar" onclick="exportarHistorialEstadosAlmacen()">📊 Exportar Excel</button>
+    </div>
+    <div id="tablaHistorialEstadosAlmacen" class="tabla-wrapper">
+      <p class="cargando" style="padding:30px;text-align:center">Abrí este tab para cargar el historial.</p>
+    </div>
+  </div>
+
+</div>
+
+<!-- MODAL: REGISTRAR ENTRADA -->
+<div id="modalEntrada" class="modal oculto">
+  <div class="modal-card">
+    <h3>📥 Registrar Entrada</h3>
+    <div class="form-item">
+      <label>Herramienta</label>
+      <select id="entradaHerramienta" class="input-select"></select>
+    </div>
+    <div class="form-item">
+      <label>DNI de quien entrega (opcional)</label>
+      <input type="text" id="entradaDNI" class="input-form" placeholder="DNI del trabajador">
+    </div>
+    <div class="form-item">
+      <label>Observación (opcional)</label>
+      <textarea id="entradaObservacion" class="input-form" rows="3" placeholder="Ej: entregada con falla en cable..."></textarea>
+    </div>
+    <div id="mensajeEntrada" class="mensaje-form"></div>
+    <div class="modal-botones">
+      <button class="btn-cancelar" onclick="cerrarModal('modalEntrada')">Cancelar</button>
+      <button class="btn-confirmar" onclick="registrarEntrada()">Registrar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: REGISTRAR SALIDA -->
+<div id="modalSalida" class="modal oculto">
+  <div class="modal-card">
+    <h3>📤 Registrar Salida</h3>
+    <div class="form-item">
+      <label>Herramienta</label>
+      <select id="salidaHerramienta" class="input-select"></select>
+    </div>
+    <div class="form-item">
+      <label>DNI del trabajador que recibe</label>
+      <input type="text" id="salidaDNI" class="input-form" placeholder="DNI del trabajador">
+      <span id="nombreTrabajador" class="nombre-preview">—</span>
+    </div>
+    <div class="form-item">
+      <label>Observación (opcional)</label>
+      <textarea id="salidaObservacion" class="input-form" rows="2" placeholder="Ej: entregada con falla en mango..."></textarea>
+    </div>
+    <div id="mensajeSalida" class="mensaje-form"></div>
+    <div class="modal-botones">
+      <button class="btn-cancelar" onclick="cerrarModal('modalSalida')">Cancelar</button>
+      <button class="btn-confirmar" onclick="registrarSalida()">Registrar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: CAMBIAR ESTADO -->
+<div id="modalEstado" class="modal oculto">
+  <div class="modal-card">
+    <h3>🔧 Cambiar Estado</h3>
+    <p>Herramienta: <strong id="modalEstadoNombre">—</strong></p>
+    <div class="form-item">
+      <label>Nuevo Estado</label>
+      <select id="selectEstado" class="input-select">
+        <option value="operativa">Operativa</option>
+        <option value="inoperativa">Inoperativa</option>
+        <option value="mantenimiento">Mantenimiento</option>
+        <option value="baja">Baja</option>
+      </select>
+    </div>
+    <div class="form-item">
+      <label for="estadoDescripcion">Justificación <span style="color:#e53e3e">*</span></label>
+      <textarea id="estadoDescripcion" class="input-form" rows="3" placeholder="Describí el motivo del cambio de estado..."></textarea>
+    </div>
+    <div id="mensajeEstado" class="mensaje-form"></div>
+    <div class="modal-botones">
+      <button class="btn-cancelar" onclick="cerrarModal('modalEstado')">Cancelar</button>
+      <button class="btn-confirmar" onclick="confirmarCambioEstado()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: DETALLE DE SOLICITUD AGRUPADA -->
+<div id="modalDetalleSolicitud" class="modal modal-detalle-sol oculto">
+  <div class="modal-card">
+
+    <h3>📋 Detalle del Pedido</h3>
+
+    <!-- DATOS DEL SOLICITANTE -->
+    <div class="det-sol-solicitante">
+      <div class="det-sol-avatar">👤</div>
+      <div class="det-sol-info">
+        <span class="det-sol-nombre" id="detSolNombre">—</span>
+        <span class="det-sol-meta">
+          DNI: <strong id="detSolDNI">—</strong> &nbsp;·&nbsp;
+          Cargo: <strong id="detSolCargo">—</strong> &nbsp;·&nbsp;
+          Fecha: <strong id="detSolFecha">—</strong>
+        </span>
+      </div>
+    </div>
+
+    <!-- AVISO DE STOCK -->
+    <div id="detSolAviso" class="det-sol-aviso oculto"></div>
+
+    <!-- LISTA DE HERRAMIENTAS -->
+    <div class="det-sol-lista-titulo">🔧 Herramientas solicitadas</div>
+    <div id="detSolLista" class="det-sol-lista"></div>
+
+    <div id="mensajeDetSol" class="mensaje-form"></div>
+
+    <div class="modal-botones">
+      <button class="btn-cancelar" onclick="cerrarModal('modalDetalleSolicitud')">Cerrar</button>
+      <button class="btn-rechazar" id="btnRechazarGrupo" onclick="rechazarGrupo()">❌ Rechazar</button>
+      <button class="btn-confirmar" id="btnAprobarGrupo" onclick="aprobarGrupo()">✅ Aprobar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: DETALLE DEVOLUCIÓN AL ALMACÉN -->
+<div id="modalPendienteAlmacen" class="modal modal-detalle-sol oculto">
+  <div class="modal-card">
+
+    <h3>📥 Devolución al Almacén</h3>
+
+    <div class="det-sol-solicitante">
+      <div class="det-sol-avatar">👷</div>
+      <div class="det-sol-info">
+        <span class="det-sol-nombre" id="pendAlmNombre">—</span>
+        <span class="det-sol-meta">
+          DNI: <strong id="pendAlmDNI">—</strong> &nbsp;·&nbsp;
+          Cargo: <strong id="pendAlmCargo">—</strong> &nbsp;·&nbsp;
+          Fecha: <strong id="pendAlmFecha">—</strong>
+        </span>
+      </div>
+    </div>
+
+    <div class="det-sol-lista-titulo">🔧 Herramientas a recibir</div>
+    <div id="pendAlmLista" class="det-sol-lista"></div>
+
+    <div id="mensajePendAlm" class="mensaje-form"></div>
+
+    <div class="modal-botones">
+      <button class="btn-rechazar" onclick="rechazarDevolucion()">❌ Rechazar</button>
+      <button class="btn-confirmar" id="btnAceptarDevolucion" onclick="aceptarDevolucion()">✅ Confirmar recepción</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: JUSTIFICACIÓN DE ESTADO -->
+<div id="modalJustificacion" class="modal oculto">
+  <div class="modal-card">
+    <h3>📋 Justificaciones de Estado</h3>
+    <p>Herramienta: <strong id="justNombre">—</strong></p>
+    <div id="justLista" class="just-lista">
+      <p class="cargando">Cargando...</p>
+    </div>
+    <div class="modal-botones">
+      <button class="btn-cancelar" onclick="cerrarModal('modalJustificacion')">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<!-- OVERLAY -->
+<div id="overlay" class="overlay oculto" onclick="cerrarTodosModales()"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabaseClient.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/panel-almacen.js"></script>
+
+</body>

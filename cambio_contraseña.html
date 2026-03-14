@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Cambiar Contraseña - Kardex Digital</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/cambioPassword.css">
+  <link rel="icon" type="image/png" href="img/icono diseño.png">
+  <style>
+    .input-pass-wrapper { position: relative; }
+    .input-pass-wrapper .form-control { padding-right: 44px; }
+    .btn-ver-pass {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+      color: #8a97b8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 6px;
+      transition: color 0.2s;
+    }
+    .btn-ver-pass:hover { color: #0d6efd; }
+    .ojo-icon, .ojo-tachado { width: 18px; height: 18px; }
+  </style>
+</head>
+<body>
+
+<div class="card-cambio">
+  <h4>🔒 Cambiar Contraseña</h4>
+  <p class="subtitulo">Tu cuenta tiene una contraseña temporal. Por seguridad, creá una nueva contraseña antes de continuar.</p>
+
+  <form id="formCambio">
+    <div class="mb-3">
+      <label class="form-label fw-semibold">Nueva contraseña</label>
+      <div class="input-pass-wrapper">
+        <input type="password" id="nuevaPassword" class="form-control" placeholder="Mínimo 8 caracteres" required>
+        <button type="button" class="btn-ver-pass" onclick="toggleVerPass('nuevaPassword', this)" tabindex="-1">
+          <svg class="ojo-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          <svg class="ojo-tachado" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+        </button>
+      </div>
+      <div class="requisitos" id="requisitos">
+        <span id="req-largo" class="fail">✗ Mínimo 8 caracteres</span>
+        <span id="req-mayus" class="fail">✗ Al menos una mayúscula</span>
+        <span id="req-num"   class="fail">✗ Al menos un número</span>
+      </div>
+    </div>
+
+    <div class="mb-4">
+      <label class="form-label fw-semibold">Confirmar contraseña</label>
+      <div class="input-pass-wrapper">
+        <input type="password" id="confirmarPassword" class="form-control" placeholder="Repetí la contraseña" required>
+        <button type="button" class="btn-ver-pass" onclick="toggleVerPass('confirmarPassword', this)" tabindex="-1">
+          <svg class="ojo-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          <svg class="ojo-tachado" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary btn-cambiar">Guardar nueva contraseña</button>
+
+    <div id="mensaje" class="aviso"></div>
+  </form>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabaseClient.js"></script>
+<script src="js/cambioPassword.js"></script>
+<script src="js/validacion.js"></script>
+<script>
+  function toggleVerPass(inputId, btn) {
+    const input = document.getElementById(inputId);
+    const ojoNormal  = btn.querySelector(".ojo-icon");
+    const ojoTachado = btn.querySelector(".ojo-tachado");
+    if (input.type === "password") {
+      input.type = "text";
+      ojoNormal.style.display  = "none";
+      ojoTachado.style.display = "block";
+    } else {
+      input.type = "password";
+      ojoNormal.style.display  = "block";
+      ojoTachado.style.display = "none";
+    }
+  }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,270 @@
+/* panel-mi-registro.css — solo estilos únicos del panel Mi Registro */
+/* Los estilos base vienen de shared.css                              */
+
+/* ─── BOTONES DE ACCIÓN PROPIOS ───────────────────────────── */
+.btn-transferir {
+  background: var(--azul);
+  color: white;
+  border: none;
+  padding: 5px 14px;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  transition: background 0.2s;
+}
+
+.btn-transferir:hover { background: var(--azul-profundo); }
+
+/* ─── CAJA DE OBSERVACIÓN EN MODAL CONFIRMAR ─────────────── */
+.observacion-box {
+  background: #fff3e0;
+  border-left: 3px solid #e65100;
+  border-radius: 6px;
+  padding: 10px 14px;
+  font-size: 0.85rem;
+  color: #4a5568;
+  display: none;
+}
+
+.observacion-box.visible { display: block; }
+
+/* ─── BOTÓN ALMACÉN ───────────────────────────────────────── */
+.acciones-fila-reg {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.btn-almacen {
+  background: #e8f5e9;
+  color: #2e7d32;
+  border: none;
+  padding: 5px 14px;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  transition: background 0.2s;
+}
+/* ─── BOTÓN VER Y CONFIRMAR ───────────────────────────────── */
+.btn-aceptar {
+  background: var(--azul);
+  color: white;
+  border: none;
+  padding: 5px 14px;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  transition: background 0.2s;
+}
+
+.btn-aceptar:hover { background: var(--azul-profundo); }
+.btn-almacen:hover { background: #c8e6c9; }
+
+ /*─── SECCIONES DEL MODAL DETALLE ─────────────────────────── */
+ 
+.detalle-seccion-herramienta {
+  background: var(--gris-claro);
+  border-radius: 10px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.detalle-seccion-personas {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.detalle-seccion {
+  background: var(--gris-claro);
+  border-radius: 10px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.detalle-seccion-titulo {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--azul-profundo);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+
+.detalle-fila {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.detalle-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #8a97b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.detalle-valor {
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: var(--texto);
+}
+
+/* ─── BOTÓN DETALLE MOVIMIENTO ────────────────────────────── */
+.btn-detalle-mov {
+  background: #e8f0ff;
+  color: var(--azul-profundo);
+  border: none;
+  padding: 5px 14px;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  transition: background 0.2s;
+}
+
+.btn-detalle-mov:hover { background: #6093fa; }
+/* ─── RESPONSIVE ──────────────────────────────────────────── */
+@media (max-width: 768px) {
+  /* Botones fila y acción */
+  .acciones-fila-reg { flex-direction: column; gap: 4px; }
+  .btn-transferir, .btn-almacen { width: 100%; text-align: center; }
+  .acciones-grupo { flex-direction: column; width: 100%; }
+  .btn-accion-herr { width: 100%; justify-content: center; padding: 12px 16px; }
+
+  /* Modal detalle movimiento */
+  .detalle-seccion-personas { grid-template-columns: 1fr; }
+
+  /* Bloques historial y pendientes */
+  .hist-bloque-header { padding: 12px 14px; flex-wrap: wrap; gap: 8px; }
+  .hist-bloque-right { flex-wrap: wrap; gap: 6px; }
+  .hist-bloque-fecha { display: none; }
+  .hist-personas-grid { grid-template-columns: 1fr; }
+  .hist-bloque-detalle { padding: 12px; gap: 12px; }
+  .hist-bloque-personas { font-size: 0.82rem; }
+  .hist-persona-origen, .hist-persona-destino { font-size: 0.82rem; }
+  .hist-bloque-count { font-size: 0.72rem; }
+  .hist-persona-card { padding: 10px 12px; }
+  .pend-botones { flex-direction: column; }
+  .pend-botones button { width: 100%; text-align: center; padding: 12px; }
+}
+
+@media (max-width: 400px) {
+  .hist-tag { font-size: 0.68rem; padding: 2px 7px; }
+  .hist-bloque-personas { gap: 4px; }
+  .hist-flecha { font-size: 0.75rem; }
+}
+
+/* ─── BOTONES DE ACCIÓN ARRIBA (MIS HERRAMIENTAS) ────── */
+.btn-accion-herr {
+  position: relative;
+  background: #e8f5e9;
+  color: #2e7d32;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.btn-accion-herr:hover:not(:disabled) { background: #c8e6c9; }
+
+.btn-accion-herr:disabled {
+  background: #f0f0f0;
+  color: #bbb;
+  cursor: not-allowed;
+}
+
+.btn-accion-transferir {
+  background: #e8f0ff;
+  color: var(--azul-profundo);
+}
+
+.btn-accion-transferir:hover:not(:disabled) { background: var(--gris-medio); }
+
+/* Checkbox en tabla */
+.check-herramienta {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  accent-color: var(--azul);
+}
+/* ─── BOTÓN EDITAR (ENVIADOS) ────────────────────────────── */
+.btn-editar-env {
+  background: #e8f0ff;
+  color: var(--azul-profundo);
+  border: 2px solid #c5d3f0;
+  padding: 8px 18px;
+  border-radius: 8px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.84rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-editar-env:hover {
+  background: var(--azul);
+  color: white;
+  border-color: var(--azul);
+}
+
+/* Estado activo: cuando está en modo edición */
+.btn-editar-env-activo {
+  background: #fff3e0 !important;
+  color: #e65100 !important;
+  border-color: #ffcc80 !important;
+}
+
+.btn-editar-env-activo:hover {
+  background: #ffe0b2 !important;
+  color: #bf360c !important;
+  border-color: #ffb74d !important;
+}
+
+/* ─── CHEVRON MEJORADO ────────────────────────────────────── */
+.hist-chevron {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--gris-claro);
+  font-size: 0.68rem;
+  color: #6c7a99;
+  transition: background 0.2s, transform 0.25s;
+  flex-shrink: 0;
+  pointer-events: none; /* evita interceptar clicks */
+}
+
+.hist-bloque-abierto .hist-chevron {
+  background: #e8f0ff;
+  color: var(--azul-profundo);
+  transform: rotate(180deg);
+}
+
+/* ─── TABLA: COLUMNA QUITAR OCULTA ───────────────────────── */
+.oculto { display: none !important; }

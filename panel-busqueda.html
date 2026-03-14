@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Búsqueda Avanzada - Control de Herramientas</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="css/shared.css">
+  <link rel="stylesheet" href="css/panel-busqueda.css">
+  <link rel="icon" type="image/png" href="img/icono diseño.png">
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <h1>🔍 Búsqueda Avanzada</h1>
+  <div class="header-right">
+    <button class="btn-volver" onclick="window.location.href='dashboard.html'">← Volver</button>
+    <button class="btn-logout" onclick="cerrarSesion()">Cerrar Sesión</button>
+  </div>
+</header>
+
+<!-- FILTROS -->
+<div class="filtros-container">
+  <div class="filtro-item">
+    <label>Nombre</label>
+    <input type="text" id="filtroNombre" class="input-filtro" placeholder="Nombre de herramienta...">
+  </div>
+  <div class="filtro-item">
+    <label>Código</label>
+    <input type="text" id="filtroCodigo" class="input-filtro" placeholder="Código...">
+  </div>
+  <div class="filtro-item">
+    <label>Categoría</label>
+    <input type="text" id="filtroCategoria" class="input-filtro" placeholder="Categoría...">
+  </div>
+  <div class="filtro-item">
+    <label>Estado</label>
+    <select id="filtroEstado" class="input-filtro">
+      <option value="">Todos</option>
+      <option value="operativa">Operativa</option>
+      <option value="inoperativa">Inoperativa</option>
+      <option value="mantenimiento">Mantenimiento</option>
+      <option value="baja">Baja</option>
+    </select>
+  </div>
+  <div class="filtro-item">
+    <label>Ubicación</label>
+    <select id="filtroUbicacion" class="input-filtro">
+      <option value="">Todas</option>
+      <option value="almacen">Almacén</option>
+      <option value="campo">Campo</option>
+    </select>
+  </div>
+  <div class="filtro-item">
+    <label>DNI Trabajador</label>
+    <input type="text" id="filtroDNI" class="input-filtro" placeholder="DNI...">
+  </div>
+  <div class="filtro-item filtro-btn">
+    <button class="btn-buscar" onclick="buscar()">🔍 Buscar</button>
+    <button class="btn-limpiar" onclick="limpiarFiltros()">✕ Limpiar</button>
+  </div>
+</div>
+
+<!-- RESULTADOS -->
+<div class="contenido">
+  <div id="estadoBusqueda" class="estado-busqueda">Ingresá los filtros y presioná Buscar.</div>
+
+  <div id="resultadosContainer" class="oculto">
+    <div class="resultados-header">
+      <span id="totalResultados" class="total-label">0 resultados</span>
+      <button class="btn-exportar" onclick="exportarReporteTrabajador()">📊 Exportar herramientas por trabajador</button>
+    </div>
+    <div class="tabla-wrapper">
+      <table class="tabla">
+        <thead>
+          <tr>
+            <th>Código</th>
+            <th>Nombre</th>
+            <th>Categoría</th>
+            <th>Modelo</th>
+            <th>Estado</th>
+            <th>Ubicación</th>
+            <th>Trabajador</th>
+            <th>Detalle</th>
+          </tr>
+        </thead>
+        <tbody id="tablaResultados"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: DETALLE DE HERRAMIENTA -->
+<div id="modalDetalle" class="modal modal-detalle oculto">
+  <div class="modal-card">
+    <div class="detalle-header">
+      <div class="detalle-icon">🔧</div>
+      <div>
+        <h3 id="detalleNombre">—</h3>
+        <span id="detalleCodigo" class="detalle-codigo">—</span>
+      </div>
+    </div>
+
+    <div class="detalle-grid">
+      <div class="detalle-item">
+        <span class="detalle-label">Código</span>
+        <span class="detalle-valor" id="detalleCategoria">—</span>
+      </div>
+      <div class="detalle-item">
+        <span class="detalle-label">Modelo</span>
+        <span class="detalle-valor" id="detalleModelo">—</span>
+      </div>
+      <div class="detalle-item">
+        <span class="detalle-label">Estado</span>
+        <span class="detalle-valor" id="detalleEstado">—</span>
+      </div>
+      <div class="detalle-item">
+        <span class="detalle-label">Ubicación</span>
+        <span class="detalle-valor" id="detalleUbicacion">—</span>
+      </div>
+      <div class="detalle-item detalle-full">
+        <span class="detalle-label">Asignado a</span>
+        <span class="detalle-valor" id="detalleTrabajador">—</span>
+      </div>
+      <div class="detalle-item detalle-full">
+        <span class="detalle-label">Descripción</span>
+        <span class="detalle-valor" id="detalleDescripcion">—</span>
+      </div>
+    </div>
+
+    <div class="historial-titulo">📋 Historial de movimientos</div>
+    <div class="tabla-wrapper">
+      <table class="tabla tabla-sm">
+        <thead>
+          <tr>
+            <th>Origen</th>
+            <th>Destino</th>
+            <th>Tipo</th>
+            <th>Observación</th>
+            <th>Fecha</th>
+          </tr>
+        </thead>
+        <tbody id="detalleHistorial">
+          <tr><td colspan="5" class="cargando">Cargando...</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="modal-botones">
+      <button class="btn-cerrar" onclick="cerrarModal('modalDetalle')">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<!-- OVERLAY -->
+<div id="overlay" class="overlay oculto" onclick="cerrarTodosModales()"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabaseClient.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/panel-busqueda.js"></script>
+
+</body>
+</html>

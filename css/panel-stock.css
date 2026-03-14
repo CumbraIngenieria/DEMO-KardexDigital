@@ -1,0 +1,205 @@
+/* panel-stock.css — solo estilos únicos del panel Stock */
+/* Los estilos base vienen de shared.css                  */
+
+/* ─── BOTÓN SOLICITAR CON BADGE ──────────────────────── */
+.btn-solicitar-carrito {
+  position: relative;
+  background: var(--azul);
+  color: white;
+  border: none;
+  padding: 10px 22px;
+  border-radius: 10px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.92rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.btn-solicitar-carrito:hover { background: var(--azul-profundo); }
+
+.btn-solicitar-carrito.shake { animation: shake 0.4s ease; }
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%       { transform: translateX(-5px); }
+  40%       { transform: translateX(5px); }
+  60%       { transform: translateX(-4px); }
+  80%       { transform: translateX(4px); }
+}
+
+/* ─── BADGE CONTADOR DEL CARRITO ─────────────────────── */
+.badge-carrito {
+  background: #e65100;
+  color: white;
+  border-radius: 50%;
+  min-width: 20px;
+  height: 20px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+}
+
+/* ─── BOTÓN AGREGAR POR FILA ──────────────────────────── */
+.btn-agregar-carrito {
+  background: #e8f0ff;
+  color: var(--azul-profundo);
+  border: 2px solid transparent;
+  padding: 5px 14px;
+  border-radius: 6px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-agregar-carrito:hover:not(:disabled):not(.en-carrito) {
+  background: var(--azul);
+  color: white;
+}
+
+/* Botón que reemplaza a Agregar cuando la herramienta está en el carrito */
+.btn-quitar-carrito {
+  background: #fdecea;
+  color: #c62828;
+  border: 2px solid #ef9a9a;
+  padding: 5px 14px;
+  border-radius: 6px;
+  font-family: "DM Sans", sans-serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-quitar-carrito:hover { background: #ffcdd2; }
+
+.btn-agregar-carrito:disabled {
+  background: #f0f0f0;
+  color: #bbb;
+  cursor: not-allowed;
+  border-color: transparent;
+}
+
+/* Herramienta con solicitud ya enviada */
+.btn-ya-solicitada {
+  background: #fff8e1;
+  color: #f57f17;
+  border: 2px solid #ffe082;
+  padding: 5px 14px;
+  border-radius: 6px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: not-allowed;
+}
+
+/* ─── MODAL CARRITO (ancho propio) ───────────────────── */
+.modal-carrito { max-width: 500px; }
+
+.carrito-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.carrito-contador {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #8a97b8;
+  background: var(--gris-claro);
+  padding: 4px 12px;
+  border-radius: 20px;
+}
+
+/* ─── ESTADO VACÍO ────────────────────────────────────── */
+.carrito-vacio      { text-align: center; padding: 28px 20px; color: #8a97b8; }
+.carrito-vacio-icon { font-size: 2.5rem; display: block; margin-bottom: 10px; }
+.carrito-vacio p    { font-size: 0.88rem; line-height: 1.6; }
+
+/* ─── LISTA DE ITEMS ──────────────────────────────────── */
+.carrito-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 320px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.carrito-lista::-webkit-scrollbar       { width: 4px; }
+.carrito-lista::-webkit-scrollbar-track { background: var(--gris-claro); border-radius: 4px; }
+.carrito-lista::-webkit-scrollbar-thumb { background: var(--gris-medio); border-radius: 4px; }
+
+.carrito-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--gris-claro);
+  border-radius: 10px;
+  padding: 10px 14px;
+  gap: 10px;
+  animation: fadeIn 0.2s ease;
+}
+
+.carrito-item-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+
+.carrito-item-nombre {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--texto);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.carrito-item-codigo { font-size: 0.75rem; color: #8a97b8; }
+
+.carrito-item-quitar {
+  background: none;
+  border: none;
+  color: #c62828;
+  font-size: 0.9rem;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: background 0.15s;
+  flex-shrink: 0;
+}
+
+.carrito-item-quitar:hover { background: #fdecea; }
+
+/* ─── AVISO LÍMITE ────────────────────────────────────── */
+.carrito-limite-msg {
+  background: #fff3e0;
+  color: #e65100;
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+/* ─── RESPONSIVE ──────────────────────────────────────── */
+@media (max-width: 768px) {
+  .btn-solicitar-carrito { width: 100%; justify-content: center; }
+  .carrito-lista { max-height: 220px; }
+  .carrito-header { flex-direction: column; align-items: flex-start; gap: 6px; }
+  .btn-agregar-carrito,
+  .btn-quitar-carrito,
+  .btn-ya-solicitada { width: 100%; text-align: center; }
+}

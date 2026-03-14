@@ -1,0 +1,184 @@
+/* panel-almacen.css — solo estilos únicos del panel almacén */
+/* Los estilos base vienen de shared.css                      */
+
+/* ─── BOTONES DE ACCIÓN PROPIOS ───────────────────────────── */
+.btn-entrada {
+  background: #e8f5e9;
+  color: #2e7d32;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 10px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-entrada:hover { background: #c8e6c9; }
+
+.btn-salida-btn {
+  background: #fff3e0;
+  color: #e65100;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 10px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-salida-btn:hover { background: #ffe0b2; }
+
+/* ─── BARRA REPORTE (HISTORIAL) ───────────────────────────── */
+.barra-reporte {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+/* ─── RESPONSIVE ──────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .barra-acciones { flex-direction: column; align-items: stretch; gap: 10px; }
+  .barra-filtros-stock { flex-direction: column; width: 100%; }
+  .input-buscar, .input-select-stock { width: 100%; min-width: unset; }
+
+  /* Botones de salida/entrada: grilla de 2 columnas */
+  .acciones-grupo {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    width: 100%;
+  }
+  .btn-exportar { grid-column: 1 / -1; text-align: center; }
+  .btn-entrada, .btn-salida-btn {
+    width: 100%;
+    text-align: center;
+    font-size: 0.8rem;
+    padding: 10px 8px;
+  }
+
+  /* Barra historial */
+  .barra-reporte { flex-direction: column; gap: 10px; align-items: stretch; }
+  .barra-reporte .btn-exportar { width: 100%; text-align: center; }
+
+  /* Botones dentro de fila de stock */
+  .acciones-fila { flex-direction: column; gap: 4px; min-width: 90px; }
+  .btn-salida-tabla, .btn-estado-tabla { width: 100%; text-align: center; }
+}
+/* ─── RESPONSIVE MÓVIL ────────────────────────────────────── */
+@media (max-width: 768px) {
+  .barra-acciones {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .barra-filtros-stock {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .input-buscar {
+    max-width: 100%;
+    width: 100%;
+  }
+
+  .input-select-stock {
+    width: 100%;
+    min-width: unset;
+  }
+
+  .acciones-grupo {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .btn-exportar {
+    grid-column: 1 / -1;  /* ocupa todo el ancho */
+    text-align: center;
+  }
+
+  .btn-entrada,
+  .btn-salida-btn {
+    width: 100%;
+    text-align: center;
+    font-size: 0.78rem;
+    padding: 10px 6px;
+  }
+}
+/* ─── FORZAR OCULTO (override display:flex de hist-bloque-detalle) ── */
+.oculto { display: none !important; }
+/* ─── JUSTIFICACIONES DE ESTADO ───────────────────────────────────────── */
+.btn-just-tabla {
+    background: #f0f4ff;
+    color: var(--azul-profundo);
+    border: 1px solid #c7d4f5;
+    padding: 5px 10px;
+    border-radius: 7px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+    white-space: nowrap;
+}
+.btn-just-tabla:hover { background: #dce6ff; }
+
+/* Lista de justificaciones en el modal */
+.just-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-height: 400px;
+    overflow-y: auto;
+    margin: 12px 0;
+}
+
+.just-item {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 12px 14px;
+}
+
+.just-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.just-estados {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.just-flecha {
+    color: #94a3b8;
+    font-size: 0.9rem;
+}
+
+.just-fecha {
+    font-size: 0.75rem;
+    color: #94a3b8;
+}
+
+.just-desc {
+    font-size: 0.875rem;
+    color: #1e293b;
+    line-height: 1.5;
+    margin-bottom: 6px;
+}
+
+.just-quien {
+    font-size: 0.78rem;
+    color: #64748b;
+}

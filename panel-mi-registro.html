@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Mi Registro - Control de Herramientas</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="css/shared.css">
+  <link rel="stylesheet" href="css/panel-mi-registro.css">
+  <link rel="icon" type="image/png" href="img/icono diseño.png">
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <h1>📋 Mi Registro</h1>
+  <div class="header-right">
+    <button class="btn-volver" onclick="window.location.href='dashboard.html'">← Volver</button>
+    <button class="btn-logout" onclick="cerrarSesion()">Cerrar Sesión</button>
+  </div>
+</header>
+
+<!-- TABS -->
+<div class="tabs-container">
+  <button class="tab activo" onclick="mostrarTab('herramientas', this, tabCallbacks)">🔧 Mis Herramientas</button>
+  <button class="tab" onclick="mostrarTab('pendientes', this, tabCallbacks)">⏳ Pendientes <span id="badgePendientes" class="badge-tab oculto">0</span></button>
+  <button class="tab" onclick="mostrarTab('enviados', this, tabCallbacks)">📤 Enviados <span id="badgeEnviados" class="badge-tab oculto">0</span></button>
+  <button class="tab" onclick="mostrarTab('historial', this, tabCallbacks)">📋 Mi Historial</button>
+</div>
+
+<!-- CONTENIDO -->
+<div class="contenido">
+
+  <!-- TAB: MIS HERRAMIENTAS -->
+  <div id="tab-herramientas" class="tab-content active">
+    <div class="barra-acciones">
+      <p class="info-tab" style="margin:0">Seleccioná herramientas y usá los botones para enviarlas.</p>
+      <div class="acciones-grupo">
+        <button class="btn-accion-herr" id="btnEnviarAlmacen" onclick="abrirModalAlmacen()">
+          📦 Enviar a Almacén
+          <span id="badgeSelAlmacen" class="badge-carrito oculto">0</span>
+        </button>
+        <button class="btn-accion-herr btn-accion-transferir" id="btnAbrirTransferir" onclick="abrirModalTransferirMultiple()">
+          🔄 Transferir
+          <span id="badgeSelTransferir" class="badge-carrito oculto">0</span>
+        </button>
+      </div>
+    </div>
+    <div class="tabla-wrapper">
+      <table class="tabla">
+        <thead>
+          <tr>
+            <th style="width:40px"></th>
+            <th>Código</th>
+            <th>Nombre</th>
+            <th>Categoría</th>
+            <th>Modelo</th>
+            <th>Estado</th>
+          </tr>
+        </thead>
+        <tbody id="tablaHerramientas">
+          <tr><td colspan="6" class="cargando">Cargando...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- TAB: PENDIENTES -->
+  <div id="tab-pendientes" class="tab-content">
+    <p class="info-tab">Movimientos que esperan tu confirmación para hacerse efectivos.</p>
+    <div class="tabla-wrapper">
+      <table class="tabla">
+        <thead>
+          <tr>
+            <th>Almacenero</th>
+            <th>Herramientas</th>
+            <th>Fecha</th>
+            <th>Detalle</th>
+          </tr>
+        </thead>
+        <tbody id="tablaPendientes">
+          <tr><td colspan="5" class="cargando">Cargando...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- TAB: ENVIADOS -->
+  <div id="tab-enviados" class="tab-content">
+    <p class="info-tab">Transferencias que iniciaste y están esperando confirmación del destinatario.</p>
+    <div class="tabla-wrapper">
+      <table class="tabla">
+        <thead>
+          <tr>
+            <th>Herramienta</th>
+            <th>Destino</th>
+            <th>Tipo</th>
+            <th>Observación</th>
+            <th>Fecha</th>
+            <th>Acción</th>
+          </tr>
+        </thead>
+        <tbody id="tablaEnviados">
+          <tr><td colspan="6" class="cargando">Cargando...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- TAB: MI HISTORIAL -->
+  <div id="tab-historial" class="tab-content">
+    <div class="tabla-wrapper">
+      <table class="tabla">
+        <thead>
+          <tr>
+            <th>Herramienta</th>
+            <th>Origen</th>
+            <th>Destino</th>
+            <th>Observación</th>
+            <th>Fecha</th>
+            <th>Detalle</th>
+          </tr>
+        </thead>
+        <tbody id="tablaHistorial">
+          <tr><td colspan="6" class="cargando">Cargando...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<!-- MODAL: TRANSFERIR (múltiple) -->
+<div id="modalTransferir" class="modal oculto">
+  <div class="modal-card">
+    <h3>🔄 Transferir Herramientas</h3>
+    <div class="det-sol-lista-titulo">Herramientas a transferir</div>
+    <div id="transferirLista" class="carrito-lista"></div>
+    <div class="form-item">
+      <label>DNI del trabajador destino</label>
+      <input type="text" id="transferirDNI" class="input-form" placeholder="DNI del trabajador">
+      <span id="transferirNombreDest" class="nombre-preview">—</span>
+    </div>
+    <div class="form-item">
+      <label>Observación (opcional)</label>
+      <textarea id="transferirObservacion" class="input-form" rows="2" placeholder="Ej: entregada con falla en mango..."></textarea>
+    </div>
+    <div id="mensajeTransferir" class="mensaje-form"></div>
+    <div class="modal-botones">
+      <button class="btn-cancelar" onclick="cerrarModal('modalTransferir')">Cancelar</button>
+      <button class="btn-confirmar" onclick="confirmarTransferencia()">Transferir</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: DETALLE DE PEDIDO PENDIENTE -->
+<div id="modalDetallePendiente" class="modal modal-detalle-sol oculto">
+  <div class="modal-card">
+
+    <h3>📦 Pedido del Almacén</h3>
+
+    <!-- DATOS DEL ALMACENERO -->
+    <div class="det-sol-solicitante">
+      <div class="det-sol-avatar">🏭</div>
+      <div class="det-sol-info">
+        <span class="det-sol-nombre" id="pendNombre">—</span>
+        <span class="det-sol-meta">
+          DNI: <strong id="pendDNI">—</strong> &nbsp;·&nbsp;
+          Cargo: <strong id="pendCargo">—</strong> &nbsp;·&nbsp;
+          Fecha: <strong id="pendFecha">—</strong>
+        </span>
+      </div>
+    </div>
+
+    <!-- AVISO STOCK -->
+    <div id="pendAviso" class="det-sol-aviso oculto"></div>
+
+    <!-- LISTA HERRAMIENTAS -->
+    <div class="det-sol-lista-titulo">🔧 Herramientas incluidas</div>
+    <div id="pendLista" class="det-sol-lista"></div>
+
+    <div id="mensajePendiente" class="mensaje-form"></div>
+
+    <div class="modal-botones">
+      <button class="btn-rechazar" onclick="rechazarGrupo()">❌ Rechazar todo</button>
+      <button class="btn-confirmar" id="btnConfirmarGrupo" onclick="confirmarGrupo()">✅ Confirmar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: DETALLE DE MOVIMIENTO -->
+<div id="modalDetalleMov" class="modal oculto">
+  <div class="modal-card">
+    <h3>📋 Detalle del Movimiento</h3>
+
+    <!-- HERRAMIENTA -->
+    <div class="detalle-seccion-herramienta">
+      <div class="detalle-seccion-titulo">🔧 Herramienta</div>
+      <div class="detalle-fila">
+        <span class="detalle-label">Código</span>
+        <span class="detalle-valor" id="detMovCodigo">—</span>
+      </div>
+      <div class="detalle-fila">
+        <span class="detalle-label">Nombre</span>
+        <span class="detalle-valor" id="detMovNombre">—</span>
+      </div>
+      <div class="detalle-fila">
+        <span class="detalle-label">Observación</span>
+        <span class="detalle-valor" id="detMovObservacion">—</span>
+      </div>
+      <div class="detalle-fila">
+        <span class="detalle-label">Fecha</span>
+        <span class="detalle-valor" id="detMovFecha">—</span>
+      </div>
+    </div>
+
+    <!-- ENVIADO Y RECIBIDO EN DOS COLUMNAS -->
+    <div class="detalle-seccion-personas">
+
+      <!-- QUIEN ENVÍA -->
+      <div class="detalle-seccion">
+        <div class="detalle-seccion-titulo">📤 Enviado por</div>
+        <div class="detalle-fila">
+          <span class="detalle-label">DNI</span>
+          <span class="detalle-valor" id="detOrigenDNI">—</span>
+        </div>
+        <div class="detalle-fila">
+          <span class="detalle-label">Nombre</span>
+          <span class="detalle-valor" id="detOrigenNombre">—</span>
+        </div>
+        <div class="detalle-fila">
+          <span class="detalle-label">Cargo</span>
+          <span class="detalle-valor" id="detOrigenCargo">—</span>
+        </div>
+      </div>
+
+      <!-- QUIEN RECIBE -->
+      <div class="detalle-seccion">
+        <div class="detalle-seccion-titulo">📥 Recibido por</div>
+        <div class="detalle-fila">
+          <span class="detalle-label">DNI</span>
+          <span class="detalle-valor" id="detDestinoDNI">—</span>
+        </div>
+        <div class="detalle-fila">
+          <span class="detalle-label">Nombre</span>
+          <span class="detalle-valor" id="detDestinoNombre">—</span>
+        </div>
+        <div class="detalle-fila">
+          <span class="detalle-label">Cargo</span>
+          <span class="detalle-valor" id="detDestinoCargo">—</span>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="modal-botones">
+      <button class="btn-cancelar" onclick="cerrarModal('modalDetalleMov')">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: ENVIAR A ALMACÉN (múltiple) -->
+<div id="modalAlmacen" class="modal oculto">
+  <div class="modal-card">
+    <h3>📦 Enviar a Almacén</h3>
+    <p>Las siguientes herramientas serán enviadas al almacén. Un almacenero deberá confirmar la recepción.</p>
+    <div class="det-sol-lista-titulo">Herramientas seleccionadas</div>
+    <div id="almacenLista" class="carrito-lista"></div>
+    <div id="mensajeAlmacen" class="mensaje-form"></div>
+    <div class="modal-botones">
+      <button class="btn-cancelar" onclick="cerrarModal('modalAlmacen')">Cancelar</button>
+      <button class="btn-confirmar" id="btnConfirmarAlmacen" onclick="confirmarEnvioAlmacen()">Enviar al almacén</button>
+    </div>
+  </div>
+</div>
+
+<!-- OVERLAY -->
+<div id="overlay" class="overlay oculto" onclick="cerrarTodosModales()"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabaseClient.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/panel-mi-registro.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,299 @@
+/* admin.css — solo estilos únicos del panel de administración */
+/* Los estilos base vienen de shared.css                       */
+
+/* ─── BARRA DE ACCIONES ───────────────────────────────────── */
+.btn-agregar {
+  background: var(--azul);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-agregar:hover { background: var(--azul-profundo); }
+
+/* ─── RESULTADO DE RESET DE CONTRASEÑA ───────────────────── */
+.resultado-reset {
+  background: #f0f4ff;
+  border-radius: 10px;
+  padding: 16px;
+  text-align: center;
+}
+
+.temp-pass-box {
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 3px;
+  color: var(--azul-profundo);
+  background: white;
+  border: 2px dashed var(--azul);
+  border-radius: 8px;
+  padding: 12px;
+  margin: 10px 0;
+}
+
+.aviso-reset {
+  font-size: 0.78rem;
+  color: #8a97b8;
+}
+
+/* ─── FORMULARIO AGREGAR TRABAJADOR (GRID 2 COL) ─────────── */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 10px;
+}
+
+/* ─── BARRA REPORTE (HISTORIAL) ───────────────────────────── */
+.barra-reporte {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+/* ─── FORZAR OCULTO (override display:flex de hist-bloque-detalle) ── */
+.oculto { display: none !important; }
+
+/* ═══════════════════════════════════════════════════════════
+   TAB BACKUP
+═══════════════════════════════════════════════════════════ */
+
+/* Layout de dos columnas: formulario + panel informativo */
+.backup-layout {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 24px;
+  align-items: start;
+}
+
+/* ─── CARD FORMULARIO ─────────────────────────────────────── */
+.backup-card {
+  background: white;
+  border-radius: 16px;
+  padding: 28px 32px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+}
+
+.backup-titulo {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--azul-profundo);
+  margin: 0 0 8px 0;
+}
+
+.backup-descripcion {
+  font-size: 0.875rem;
+  color: #64748b;
+  margin: 0 0 24px 0;
+  line-height: 1.5;
+}
+
+.backup-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin-bottom: 24px;
+}
+
+.backup-label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 6px;
+}
+
+/* ─── BOTÓN GENERAR ───────────────────────────────────────── */
+.btn-backup-generar {
+  width: 100%;
+  background: var(--azul);
+  color: white;
+  border: none;
+  padding: 13px 20px;
+  border-radius: 10px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+}
+
+.btn-backup-generar:hover   { background: var(--azul-profundo); }
+.btn-backup-generar:active  { transform: scale(0.98); }
+.btn-backup-generar:disabled {
+  background: #94a3b8;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ─── MENSAJE DE ESTADO ───────────────────────────────────── */
+.backup-mensaje {
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 16px;
+}
+
+.backup-mensaje.error   { background: #fee2e2; color: #b91c1c; }
+.backup-mensaje.exito   { background: #dcfce7; color: #15803d; }
+.backup-mensaje.cargando { background: #f0f4ff; color: var(--azul-profundo); }
+
+/* ─── CARD INFORMATIVA ────────────────────────────────────── */
+.backup-info-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 24px;
+}
+
+.backup-info-titulo {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #374151;
+  margin: 0 0 18px 0;
+}
+
+.backup-info-item {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.backup-info-icon {
+  font-size: 1.4rem;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.backup-info-item strong {
+  display: block;
+  font-size: 0.875rem;
+  color: #1e293b;
+  margin-bottom: 3px;
+}
+
+.backup-info-item p {
+  font-size: 0.8rem;
+  color: #64748b;
+  margin: 0;
+  line-height: 1.45;
+}
+
+.backup-info-hr {
+  border: none;
+  border-top: 1px solid #e2e8f0;
+  margin: 16px 0;
+}
+
+.backup-info-nota {
+  font-size: 0.8rem;
+  color: #64748b;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* ─── MODAL CONFIRMACIÓN BACKUP ───────────────────────────── */
+.backup-confirm-subtitulo {
+  font-size: 0.875rem;
+  color: #64748b;
+  margin: 0 0 20px 0;
+}
+
+.backup-confirm-grid {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.backup-confirm-fila {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.backup-confirm-label {
+  font-size: 0.8rem;
+  color: #64748b;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.backup-confirm-valor {
+  font-size: 0.875rem;
+  color: #1e293b;
+  font-weight: 500;
+  text-align: right;
+}
+
+.backup-confirm-archivo {
+  font-family: monospace;
+  font-size: 0.78rem;
+  color: var(--azul-profundo);
+  word-break: break-all;
+}
+
+/* ─── BARRA DE PROGRESO ───────────────────────────────────── */
+.backup-progreso {
+  margin-bottom: 16px;
+}
+
+.backup-progreso-barra {
+  background: #e2e8f0;
+  border-radius: 99px;
+  height: 8px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.backup-progreso-fill {
+  height: 100%;
+  background: var(--azul);
+  border-radius: 99px;
+  width: 0%;
+  transition: width 0.4s ease;
+}
+
+.backup-progreso-texto {
+  font-size: 0.8rem;
+  color: #64748b;
+  text-align: center;
+  margin: 0;
+}
+
+/* ─── RESPONSIVE ──────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .backup-layout {
+    grid-template-columns: 1fr;
+  }
+  .backup-info-card {
+    order: -1; /* info arriba en móvil */
+  }
+}
+
+@media (max-width: 768px) {
+  .btn-agregar { width: 100%; text-align: center; }
+  .form-grid { grid-template-columns: 1fr; }
+  .temp-pass-box { font-size: 1.2rem; letter-spacing: 2px; padding: 10px 8px; }
+  .resultado-reset { padding: 12px; }
+  .barra-reporte { flex-direction: column; gap: 10px; align-items: stretch; }
+  .barra-reporte .btn-exportar { width: 100%; text-align: center; }
+  .backup-card { padding: 20px 16px; }
+  .btn-backup-generar { font-size: 0.9rem; padding: 12px; }
+  .backup-confirm-fila { flex-direction: column; gap: 2px; }
+  .backup-confirm-valor { text-align: left; }
+}
